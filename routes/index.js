@@ -14,13 +14,6 @@ const router = express.Router();
 router.post('/signup', validateSignUpRequest, isRequestValidated, UserController.signUp);
 router.post('/login', validateLoginRequest, isRequestValidated, UserController.login);
 
-router.post(
-  '/updatePassword',
-  validateUpdatePasswordRequest,
-  isRequestValidated,
-  UserController.updateUserPassword,
-);
-
 router.use('/secure', checkUserAuthenticity, protectedRouter);
 
 export default router;

@@ -10,7 +10,7 @@ const checkUserAuthenticity = async (request, response, next) => {
       const user = await userModel.findById(userId);
       if (user.userName === username) {
         request.user = user;
-        return next();
+        next();
       } else {
         response.status(403).send('Unauthorized');
       }
