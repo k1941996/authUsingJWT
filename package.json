@@ -33,6 +33,7 @@
     "#routes/*": "./routes/*",
     "#controllers/*": "./controllers/*",
     "#middlewares/*": "./middlewares/*",
-    "#validators/*": "./middlewares/validators/*"
+    "#validators/*": "./middlewares/validators/*",
+    "#utils/*": "./utils/*"
   }
 }

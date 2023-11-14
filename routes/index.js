@@ -1,5 +1,5 @@
 import express from 'express';
-import UserController from '#controllers/userController.js';
+import userPublicController from '#controllers/user/public/userPublicController.js';
 import {
   validateLoginRequest,
   validateSignUpRequest,
@@ -10,8 +10,18 @@ import checkUserAuthenticity from '#middlewares/authMiddleware/authMiddleware.js
 
 const router = express.Router();
 
-router.post('/signup', validateSignUpRequest, isRequestValidated, UserController.signUp);
-router.post('/login', validateLoginRequest, isRequestValidated, UserController.login);
+router.post(
+  '/signup',
+  validateSignUpRequest,
+  isRequestValidated,
+  userPublicController.signUp,
+);
+router.post(
+  '/login',
+  validateLoginRequest,
+  isRequestValidated,
+  userPublicController.login,
+);
 
 router.use('/secure', checkUserAuthenticity, protectedRouter);
 

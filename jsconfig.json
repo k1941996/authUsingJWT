@@ -12,6 +12,7 @@
       "#routes/*": ["./routes/*"],
       "#middlewares/*": ["./middlewares/*"],
       "#controllers/*": ["./controllers/*"],
+      "#utils/*": ["./utils/*"],
       "#validators/*": ["./middlewares/validators/*"],
     },
     "esModuleInterop": true,
