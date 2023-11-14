@@ -5,7 +5,7 @@ import { validateUpdatePasswordRequest } from '#middlewares/validators/authValid
 
 const protectedRouter = express.Router();
 
-protectedRouter.post(
+protectedRouter.patch(
   '/updatePassword',
   validateUpdatePasswordRequest,
   isRequestValidated,

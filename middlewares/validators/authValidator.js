@@ -47,6 +47,7 @@ const validateSignUpRequest = [
 ];
 
 const validateUpdatePasswordRequest = [
+  check('old_password').notEmpty().bail().withMessage('Old passwod is required'),
   check('password')
     .notEmpty()
     .bail()

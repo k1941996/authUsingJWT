@@ -2,7 +2,6 @@ import express from 'express';
 import UserController from '#controllers/userController.js';
 import {
   validateLoginRequest,
-  validateUpdatePasswordRequest,
   validateSignUpRequest,
 } from '#middlewares/validators/authValidator.js';
 import isRequestValidated from '#middlewares/validators/commonError.js';

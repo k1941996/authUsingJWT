@@ -2,24 +2,26 @@ import jwt from 'jsonwebtoken';
 import userModel from '#models/UserModel.js';
 
 const checkUserAuthenticity = async (request, response, next) => {
-  try {
-    const { authorization, username } = request.headers;
-    if (authorization && authorization.startsWith('Bearer')) {
+  const { authorization } = request.headers;
+  const { userName } = request.body;
+  if (authorization && authorization.startsWith('Bearer')) {
+    try {
       const token = authorization.split(' ')[1];
-      const { userId } = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const user = await userModel.findById(userId);
-      if (user.userName === username) {
+      const { userId, password_id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = (await userModel.findById(userId)).toObject();
+      if (user.userName === userName && user.password_id === password_id) {
         request.user = user;
         next();
       } else {
-        response.status(403).send('Unauthorized');
+        response.status(401).send({ message: 'Unauthorized', error: 'Invalid User' });
       }
-    } else {
-      response.status(403).send('Unauthorized');
+    } catch (error) {
+      response.status(401).send({ message: 'Unauthorized', error });
     }
-  } catch (error) {
-    console.log(error);
-    response.status(400).send('Something went wrong');
+  } else {
+    response
+      .status(401)
+      .send({ message: 'Unauthorized', error: { message: 'Missing Token' } });
   }
 };
 

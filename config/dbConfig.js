@@ -6,7 +6,7 @@ const connectDB = async (DATABASE_URL) => {
       dbName: 'TestApp',
     };
     await mongoose.connect(DATABASE_URL, DB_OPTIONS);
-    console.log('Connected Successfully'); // remove in prod
+    console.log('Connection to database Successfully established'); // remove in prod
   } catch (error) {
     console.log(error);
   }

@@ -14,13 +14,13 @@ app.use(express.urlencoded({ extended: true }));
 const DATABASE_URL = process.env.DATABASE_URL;
 connectDB(DATABASE_URL);
 
-const PORT = process.env.PORT || 50005;
+const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello world');
 });
 
-app.use('/api', routes);
+app.use('/api/v1', routes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
