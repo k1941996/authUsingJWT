@@ -1,4 +1,5 @@
 import User from '#models/UserModel.js';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { generatePassowrdId, generateToken } from '#utils/authUtils.js';
 
@@ -63,7 +64,59 @@ const login = async (request, response) => {
   }
 };
 
+const forgotPassword = async (request, response) => {
+  const { email } = request.body;
+  const user = await User.findOne({ email });
+  if (user) {
+    const secret = user._id + process.env.JWT_SECRET_KEY;
+    const token = jwt.sign({ userId: user._id }, secret, { expiresIn: '15min' });
+    const link = `http://localhost:4000/api/user/reset/${user._id}/${token}`;
+    console.log(link);
+    response.status(200).send({
+      message: `If a matching account was found, an email was sent to ${
+        email || `email you entered`
+      } to allow you to reset your password.`,
+      link,
+    });
+  } else {
+    response.status(200).send({
+      message: `If a matching account was found, an email was sent to ${
+        email || `email you entered`
+      } to allow you to reset your password.`,
+    });
+  }
+};
 
+const resetPassword = async (request, response) => {
+  const { password } = request.body;
+  const { id, token } = request.params;
+  const user = await User.findById(id);
+  const new_secret = user._id + process.env.JWT_SECRET_KEY;
+  try {
+    jwt.verify(token, new_secret);
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const password_id = generatePassowrdId();
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        $set: { password: hashedPassword, password_id },
+      },
+      { new: true },
+    ).lean();
 
-const UserPublicController = { signUp, login };
+    const new_token = generateToken({ ...updatedUser, password_id });
+    delete updatedUser.password;
+
+    return response.status(200).send({
+      message: 'Password reset Successfully',
+      user: { ...updatedUser },
+      token: new_token,
+    });
+  } catch (err) {
+    response.status(400).send({ ...err, message: 'Invalid token' });
+  }
+};
+
+const UserPublicController = { signUp, login, forgotPassword, resetPassword };
 export default UserPublicController;
