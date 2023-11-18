@@ -1,0 +1,23 @@
+version: '1.0.0'
+services:
+  mongo_db:
+    container_name: mongo_auth_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+  
+  api: 
+    container_name: authJWTService
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      PORT: 8000
+      DATABASE_URL: mongodb://mongo_auth_container:27017
+      JWT_SECRET_KEY: dec22f5b0ce9bb417d9333e85266f5f2bfee7a5c0e2357458bee0b8cf2e8e4b0471afb81fa3ece5dbc7cdbe9624c644b5ad0af0023e6c8f5dcf65966d5f72dd0
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}

@@ -1,7 +1,7 @@
 FROM node:alpine
 WORKDIR /home/auth/
 
-COPY package*.json .
+RUN git clone https://github.com/k1941996/authUsingJWT.git
 RUN npm ci
 
 COPY . .
