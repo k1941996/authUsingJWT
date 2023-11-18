@@ -3,13 +3,14 @@ import userModel from '#models/UserModel.js';
 
 const checkUserAuthenticity = async (request, response, next) => {
   const { authorization } = request.headers;
-  const { userName } = request.body;
-  if (authorization && authorization.startsWith('Bearer')) {
+  const { accountid } = request.headers;
+  if (authorization && authorization.startsWith('Bearer') && accountid) {
     try {
       const token = authorization.split(' ')[1];
-      const { userId, password_id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const user = (await userModel.findById(userId)).toObject();
-      if (user.userName === userName && user.password_id === password_id) {
+      const { password_id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = (await userModel.findById(accountid)).toObject();
+      const userId = user._id.toString();
+      if (user.password_id === password_id && userId === accountid) {
         request.user = user;
         next();
       } else {
@@ -19,9 +20,10 @@ const checkUserAuthenticity = async (request, response, next) => {
       response.status(401).send({ message: 'Unauthorized', error });
     }
   } else {
-    response
-      .status(401)
-      .send({ message: 'Unauthorized', error: { message: 'Missing Token' } });
+    response.status(401).send({
+      message: 'Unauthorized',
+      error: { message: 'Missing Token or accountID' },
+    });
   }
 };
 

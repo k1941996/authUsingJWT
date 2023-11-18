@@ -6,13 +6,8 @@ export const generatePassowrdId = () => {
 };
 
 export const generateToken = (user) => {
-  const token = jwt.sign(
-    { userId: user._id, password_id: user.password_id },
-    process.env.JWT_SECRET_KEY,
-    {
-      expiresIn: '1d',
-    },
-  );
+  const token = jwt.sign({ password_id: user.password_id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: '1d',
+  });
   return token;
 };
-
